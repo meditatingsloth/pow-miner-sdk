@@ -2,7 +2,7 @@
 import 'zx/globals';
 import { cliArguments, workingDirectory } from '../utils.mjs';
 
-const [level, tag = 'latest'] = cliArguments();
+const [level, tag = 'latest', otp] = cliArguments();
 if (!level) {
   throw new Error('A version level — e.g. "patch" — must be provided.');
 }
@@ -18,7 +18,7 @@ cd(path.join(workingDirectory, 'clients', 'core'));
 await $`pnpm install`;
 let { stdout: coreStdout } = await $`pnpm version ${level} ${versionArgs}`;
 const newCoreVersion = coreStdout.slice(1).trim();
-await $`pnpm publish --no-git-checks --tag ${tag}`;
+await $`pnpm publish --no-git-checks --tag ${tag}${otp ? ` --otp ${otp}` : ''}`;
 
 // Go to UMI client and update its dependencies
 cd(path.join(workingDirectory, 'clients', 'umi'));
@@ -38,7 +38,7 @@ if (process.env.CI) {
 
 // Publish the package.
 // This will also build the package before publishing (see prepublishOnly script).
-await $`pnpm publish --no-git-checks --tag ${tag}`;
+await $`pnpm publish --no-git-checks --tag ${tag}${otp ? ` --otp ${otp}` : ''}`;
 
 // Restore workspace dependency for development
 await $`pnpm add @pow-miner-sdk/core@workspace:*`;
