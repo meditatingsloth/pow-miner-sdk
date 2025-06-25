@@ -69,6 +69,7 @@
   },
   "packageManager": "pnpm@9.1.0",
   "dependencies": {
-    "@noble/hashes": "^1.8.0"
+    "@noble/hashes": "^1.8.0",
+    "@solana/codecs-core": "^2.1.1"
   }
 }

@@ -1,4 +1,5 @@
 import { keccak_256 } from '@noble/hashes/sha3';
+import { ReadonlyUint8Array } from '@solana/codecs-core';
 
 const LZ_TABLE = new Uint8Array(256);
 const TZ_TABLE = new Uint8Array(256);
@@ -28,10 +29,10 @@ function countTZ(h: Uint8Array): number {
 }
 
 export type PowInput = {
-  walletBytes: Uint8Array;
-  slotBytes: Uint8Array;
+  walletBytes: ReadonlyUint8Array;
+  slotBytes: ReadonlyUint8Array;
   adaptiveTarget: number;
-  totalHashesBytes: Uint8Array;
+  totalHashesBytes: ReadonlyUint8Array;
 };
 
 export type PowStatus = {
