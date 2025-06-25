@@ -2,11 +2,11 @@ import {
   Address,
   Commitment,
   CompilableTransactionMessage,
-  TransactionMessageWithBlockhashLifetime,
   Rpc,
   RpcSubscriptions,
   SolanaRpcApi,
   SolanaRpcSubscriptionsApi,
+  TransactionMessageWithBlockhashLifetime,
   TransactionSigner,
   airdropFactory,
   appendTransactionMessageInstruction,
@@ -21,8 +21,9 @@ import {
   setTransactionMessageFeePayerSigner,
   setTransactionMessageLifetimeUsingBlockhash,
   signTransactionMessageWithSigners,
-} from '@solana/web3.js';
-import { getCreateInstruction } from '../src';
+} from '@solana/kit';
+import { buildCreateTokenTransaction } from 'gill/programs/token';
+import { getInitializeConfigInstructionAsync } from '../src';
 
 type Client = {
   rpc: Rpc<SolanaRpcApi>;
@@ -81,23 +82,41 @@ export const getBalance = async (client: Client, address: Address) =>
   (await client.rpc.getBalance(address, { commitment: 'confirmed' }).send())
     .value;
 
-export const createCounterForAuthority = async (
+export const createConfig = async (
   client: Client,
-  authority: TransactionSigner
+  admin: TransactionSigner
 ): Promise<Address> => {
-  const [transaction, counter] = await Promise.all([
-    createDefaultTransaction(client, authority),
-    generateKeyPairSigner(),
+  const mintKey = await generateKeyPairSigner();
+
+  const createMintTx = await buildCreateTokenTransaction({
+    feePayer: admin,
+    latestBlockhash: (await client.rpc.getLatestBlockhash().send()).value,
+    mint: mintKey,
+    metadata: {
+      isMutable: true, // if the `updateAuthority` can change this metadata in the future
+      name: 'Only Possible On Solana',
+      symbol: 'OPOS',
+      uri: 'https://raw.githubusercontent.com/solana-developers/opos-asset/main/assets/Climate/metadata.json',
+    },
+  });
+  const signedTx = await signTransactionMessageWithSigners(createMintTx);
+  const sendAndConfirmTransaction = sendAndConfirmTransactionFactory(client);
+
+  const [transaction] = await Promise.all([
+    createDefaultTransaction(client, admin),
+    sendAndConfirmTransaction(signedTx, { commitment: 'confirmed' }),
   ]);
-  const createIx = getCreateInstruction({
-    counter,
-    payer: authority,
-    authority: authority.address,
+
+  const ix = await getInitializeConfigInstructionAsync({
+    admin,
+    mint: mintKey.address,
+    mintAuth: admin.address,
+    mintAuthBump: 0,
   });
   await pipe(
     transaction,
-    (tx) => appendTransactionMessageInstruction(createIx, tx),
+    (tx) => appendTransactionMessageInstruction(ix, tx),
     (tx) => signAndSendTransaction(client, tx)
   );
-  return counter.address;
+  return admin.address;
 };

@@ -27,7 +27,14 @@ if (!restart && isValidatorRunning) {
 const verb = isValidatorRunning ? 'Restarting' : 'Starting';
 
 // Get programs and accounts.
-const programs = [...getPrograms(), ...getExternalPrograms()];
+const programs = [
+  ...getPrograms(),
+  ...getExternalPrograms(),
+  {
+    programId: 'BGLDbLHXzZEKvZX2PAkvSChWtZYySZ16Drj6NX247AfY',
+    deployPath: 'target/deploy/pow_miner.so',
+  },
+];
 const programPluralized = programs.length === 1 ? 'program' : 'programs';
 const accounts = [...getExternalAccounts()];
 const accountsPluralized = accounts.length === 1 ? 'account' : 'accounts';

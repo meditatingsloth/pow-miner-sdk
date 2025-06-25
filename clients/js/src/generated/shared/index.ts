@@ -10,12 +10,12 @@ import {
   AccountRole,
   isProgramDerivedAddress,
   isTransactionSigner as kitIsTransactionSigner,
+  upgradeRoleToSigner,
   type Address,
   type IAccountMeta,
   type IAccountSignerMeta,
   type ProgramDerivedAddress,
   type TransactionSigner,
-  upgradeRoleToSigner,
 } from '@solana/kit';
 
 /**

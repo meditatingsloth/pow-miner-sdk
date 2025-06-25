@@ -21,6 +21,7 @@
   "scripts": {
     "build": "rimraf dist && tsup && tsc -p ./tsconfig.declarations.json",
     "build:docs": "typedoc",
+    "dev": "tsup --watch",
     "test": "ava",
     "lint": "eslint --ext js,ts,tsx src",
     "lint:fix": "eslint --fix --ext js,ts,tsx src",
@@ -34,12 +35,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/meditatingsloth/pow-miner.git"
+    "url": "git+https://github.com/meditatingsloth/pow-miner-sdk.git"
   },
   "bugs": {
-    "url": "https://github.com/meditatingsloth/pow-miner/issues"
+    "url": "https://github.com/meditatingsloth/pow-miner-sdk/issues"
   },
-  "homepage": "https://github.com/meditatingsloth/pow-miner#readme",
+  "homepage": "https://github.com/meditatingsloth/pow-miner-sdk#readme",
   "license": "MIT",
   "devDependencies": {
     "@ava/typescript": "^4.1.0",
@@ -49,7 +50,9 @@
     "@typescript-eslint/parser": "^7.16.1",
     "ava": "^6.1.3",
     "eslint": "^8.57.0",
+    "pow-miner/core": "workspace:*",
     "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "rimraf": "^5.0.5",
     "tsup": "^8.1.2",
     "typedoc": "^0.25.12",
@@ -68,6 +71,7 @@
   },
   "packageManager": "pnpm@9.1.0",
   "dependencies": {
-    "@solana/kit": "^2.1.1"
+    "@solana/kit": "^2.1.1",
+    "gill": "^0.10.2"
   }
 }

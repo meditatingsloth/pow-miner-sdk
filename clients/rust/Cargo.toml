@@ -2,7 +2,7 @@
 name = "pow-miner-sdk"
 version = "0.0.0"
 description = "A generated Rust library for the Pow Miner program"
-repository = "https://github.com/meditatingsloth/pow-miner"
+repository = "https://github.com/meditatingsloth/pow-miner-sdk"
 edition = "2021"
 readme = "README.md"
 license-file = "../../LICENSE"
