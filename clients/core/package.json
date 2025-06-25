@@ -1,5 +1,5 @@
 {
-  "name": "pow-miner/core",
+  "name": "@pow-miner-sdk/core",
   "version": "0.0.0",
   "description": "JavaScript client for the Pow Miner program",
   "sideEffects": false,

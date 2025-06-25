@@ -4,12 +4,8 @@ import { cliArguments, workingDirectory } from '../utils.mjs';
 
 const [level, tag = 'latest'] = cliArguments();
 if (!level) {
-  throw new Error('A version level — e.g. "path" — must be provided.');
+  throw new Error('A version level — e.g. "patch" — must be provided.');
 }
-
-// Go to the client directory and install the dependencies.
-cd(path.join(workingDirectory, 'clients', 'js'));
-await $`pnpm install`;
 
 // Define version args first
 const versionArgs = [
@@ -24,8 +20,9 @@ let { stdout: coreStdout } = await $`pnpm version ${level} ${versionArgs}`;
 const newCoreVersion = coreStdout.slice(1).trim();
 await $`pnpm publish --no-git-checks --tag ${tag}`;
 
-// Go back to JS client and update its dependencies
-cd(path.join(workingDirectory, 'clients', 'js'));
+// Go to UMI client and update its dependencies
+cd(path.join(workingDirectory, 'clients', 'umi'));
+await $`pnpm install`;
 
 // Replace workspace dependency with actual version
 await $`pnpm add @pow-miner-sdk/core@${newCoreVersion}`;
@@ -47,7 +44,7 @@ await $`pnpm publish --no-git-checks --tag ${tag}`;
 await $`pnpm add @pow-miner-sdk/core@workspace:*`;
 
 // Commit the new version.
-await $`git commit -am "Publish JS client v${newVersion}"`;
+await $`git commit -am "Publish UMI client v${newVersion}"`;
 
 // Tag the new version.
-await $`git tag -a js@v${newVersion} -m "JS client v${newVersion}"`;
+await $`git tag -a umi@v${newVersion} -m "UMI client v${newVersion}"`;

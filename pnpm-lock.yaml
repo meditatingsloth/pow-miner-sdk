@@ -84,6 +84,9 @@ importers:
 
   clients/js:
     dependencies:
+      '@pow-miner-sdk/core':
+        specifier: workspace:*
+        version: link:../core
       '@solana/kit':
         specifier: ^2.1.1
         version: 2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(ws@8.18.2)
@@ -112,9 +115,6 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
-      pow-miner/core:
-        specifier: workspace:*
-        version: link:../core
       prettier:
         specifier: ^3.3.3
         version: 3.6.0
@@ -139,13 +139,13 @@ importers:
       '@metaplex-foundation/umi':
         specifier: ^1.2.0
         version: 1.2.0
-      serializers:
-        specifier: link:@metaplex-foundation/umi/serializers
-        version: link:@metaplex-foundation/umi/serializers
     devDependencies:
       '@ava/typescript':
         specifier: ^4.1.0
         version: 4.1.0
+      '@pow-miner-sdk/core':
+        specifier: workspace:*
+        version: link:../core
       '@solana/eslint-config-solana':
         specifier: ^3.0.3
         version: 3.0.6(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3))(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.8.3))(eslint-plugin-jest@27.9.0(@typescript-eslint/eslint-plugin@7.18.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3))(eslint-plugin-react-hooks@4.6.2(eslint@8.57.1))(eslint-plugin-simple-import-sort@12.1.1(eslint@8.57.1))(eslint-plugin-sort-keys-fix@1.1.2)(eslint-plugin-typescript-sort-keys@3.3.0(@typescript-eslint/parser@7.18.0(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3))(eslint@8.57.1)(typescript@5.8.3)
@@ -167,9 +167,6 @@ importers:
       eslint:
         specifier: ^8.57.0
         version: 8.57.1
-      pow-miner/core:
-        specifier: workspace:*
-        version: link:../core
       prettier:
         specifier: ^3.3.3
         version: 3.6.0
