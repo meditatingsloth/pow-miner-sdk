@@ -89,7 +89,7 @@ importers:
     dependencies:
       '@pow-miner-sdk/core':
         specifier: '*'
-        version: 0.0.1
+        version: 0.0.2(typescript@5.8.3)
       '@solana/kit':
         specifier: ^2.1.1
         version: 2.1.1(fastestsmallesttextencoderdecoder@1.0.22)(typescript@5.8.3)(ws@8.18.2)
@@ -491,8 +491,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@pow-miner-sdk/core@0.0.1':
-    resolution: {integrity: sha512-yyfTk1VqsRjKXx+0T73l//fwjjDL8jy/Xy8gVz6oPpZoCtY4NMbZCZkhhUlWzp+aS9G539qY4KUjpj1+FyQb1A==}
+  '@pow-miner-sdk/core@0.0.2':
+    resolution: {integrity: sha512-yrVx5ITPxkclNi9TDqVxUkblHBJB7WF3+2MIasUkTT1/FeVLB+/7UdUz8m2rtCEe5TQUzE3yEJ3c5TXFfKfYEw==}
 
   '@rollup/pluginutils@5.2.0':
     resolution: {integrity: sha512-qWJ2ZTbmumwiLFomfzTyt5Kng4hwPi9rwCYN4SHb6eaRU1KNO4ccxINHr/VhH4GgPlt1XfSTLX2LBTme8ne4Zw==}
@@ -3007,9 +3007,12 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@pow-miner-sdk/core@0.0.1':
+  '@pow-miner-sdk/core@0.0.2(typescript@5.8.3)':
     dependencies:
       '@noble/hashes': 1.8.0
+      '@solana/codecs-core': 2.1.1(typescript@5.8.3)
+    transitivePeerDependencies:
+      - typescript
 
   '@rollup/pluginutils@5.2.0(rollup@4.44.0)':
     dependencies:

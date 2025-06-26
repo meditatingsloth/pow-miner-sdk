@@ -1,6 +1,6 @@
 {
   "name": "@pow-miner-sdk/core",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "JavaScript client for the Pow Miner program",
   "sideEffects": false,
   "module": "./dist/src/index.mjs",
