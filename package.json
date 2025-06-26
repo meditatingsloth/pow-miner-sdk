@@ -34,6 +34,8 @@
     "@metaplex-foundation/shank-js": "^0.1.7",
     "codama": "^1.0.0",
     "typescript": "^5.5.2",
+    "prettier": "^3.6.1",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "zx": "^7.2.3"
   },
   "engines": {

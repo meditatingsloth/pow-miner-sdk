@@ -5,6 +5,5 @@
   "useTabs": false,
   "tabWidth": 2,
   "arrowParens": "always",
-  "printWidth": 80,
-  "plugins": ["prettier-plugin-organize-imports"]
+  "printWidth": 80
 }
