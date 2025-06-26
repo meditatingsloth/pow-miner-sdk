@@ -6,27 +6,27 @@ import { renderVisitor as renderRustVisitor } from '@codama/renderers-rust';
 import * as c from 'codama';
 import 'zx/globals';
 
-const idl = require('../idls/pow_miner.json');
+const idl = require('../idls/useraccount.json');
 const codama = c.createFromRoot(rootNodeFromAnchor(idl));
 
 // Update programs.
 codama.update(
   c.updateProgramsVisitor({
-    powMiner: { name: 'powMiner' },
+    useraccount: { name: 'useraccount' },
   })
 );
 
 // Update accounts.
 codama.update(
   c.updateAccountsVisitor({
-    config: {
-      seeds: [c.constantPdaSeedNodeFromString('utf8', 'config')],
-    },
-    proof: {
+    user: {
       seeds: [
-        c.constantPdaSeedNodeFromString('utf8', 'proof'),
-        c.variablePdaSeedNode('user', c.publicKeyTypeNode()),
+        c.constantPdaSeedNodeFromString('utf8', 'user'),
+        c.variablePdaSeedNode('authority', c.publicKeyTypeNode()),
       ],
+    },
+    programState: {
+      seeds: [c.constantPdaSeedNodeFromString('utf8', 'program_state')],
     },
   })
 );
@@ -34,16 +34,19 @@ codama.update(
 codama.update(
   c.setInstructionAccountDefaultValuesVisitor([
     {
-      account: 'user',
+      account: 'authority',
       defaultValue: c.identityValueNode(),
     },
     {
-      account: 'config',
-      defaultValue: c.pdaValueNode('config'),
+      account: 'user',
+      defaultValue: c.pdaValueNode('user', [
+        c.constantPdaSeedNodeFromString('utf8', 'user'),
+        c.variablePdaSeedNode('authority', c.publicKeyValueNode('authority')),
+      ]),
     },
     {
-      account: 'proof',
-      defaultValue: c.pdaValueNode('proof'),
+      account: 'programState',
+      defaultValue: c.pdaValueNode('programState'),
     },
   ])
 );
@@ -52,7 +55,7 @@ codama.update(
 codama.update(c.updateInstructionsVisitor({}));
 
 // Render JavaScript.
-const jsClient = path.join(__dirname, '..', 'clients', 'js');
+const jsClient = path.join(__dirname, '..', 'clients', 'useraccount', 'js');
 codama.accept(
   renderJavaScriptVisitor(path.join(jsClient, 'src', 'generated'), {
     prettierOptions: require(path.join(jsClient, '.prettierrc.json')),
@@ -60,7 +63,7 @@ codama.accept(
 );
 
 // Render JavaScript.
-const umiClient = path.join(__dirname, '..', 'clients', 'umi');
+const umiClient = path.join(__dirname, '..', 'clients', 'useraccount', 'umi');
 codama.accept(
   renderUmiVisitor(path.join(umiClient, 'src', 'generated'), {
     prettierOptions: require(path.join(umiClient, '.prettierrc.json')),
@@ -68,7 +71,7 @@ codama.accept(
 );
 
 // Render Rust.
-const rustClient = path.join(__dirname, '..', 'clients', 'rust');
+const rustClient = path.join(__dirname, '..', 'clients', 'useraccount', 'rust');
 codama.accept(
   renderRustVisitor(path.join(rustClient, 'src', 'generated'), {
     formatCode: true,
