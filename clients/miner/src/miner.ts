@@ -1,6 +1,6 @@
 import {
   fetchProofFromSeeds,
-  findHashSIMD,
+  findHashMultithreaded,
   getClaimInstructionAsync,
   getMineInstructionAsync,
   POW_MINER_PROGRAM_ADDRESS,
@@ -24,13 +24,31 @@ import {
   FEE_RECEIVER_PUBKEY,
 } from './utils';
 
+// Add type definition for target difficulty
+type TargetDifficulty = number | (() => number);
+
 export class Miner {
   private client: Client;
   private keypairSigner: KeyPairSigner;
+  private targetDifficulty: TargetDifficulty;
 
-  constructor(client: Client, keypairSigner: KeyPairSigner) {
+  constructor(
+    client: Client,
+    keypairSigner: KeyPairSigner,
+    targetDifficulty: TargetDifficulty = 25
+  ) {
     this.client = client;
     this.keypairSigner = keypairSigner;
+    this.targetDifficulty = targetDifficulty;
+  }
+
+  /**
+   * Resolve the target difficulty value
+   */
+  private resolveTargetDifficulty(): number {
+    return typeof this.targetDifficulty === 'function'
+      ? this.targetDifficulty()
+      : this.targetDifficulty;
   }
 
   /**
@@ -70,11 +88,13 @@ export class Miner {
       onProgress?.(status);
     }
 
-    const miningResult = await findHashSIMD(
+    const currentDifficulty = this.resolveTargetDifficulty();
+
+    const miningResult = await findHashMultithreaded(
       {
         walletBytes,
         slotBytes,
-        adaptiveTarget: 24,
+        targetDifficulty: currentDifficulty,
         totalHashesBytes,
       },
       _onProgress

@@ -32,7 +32,7 @@ export function countTZ(h: Uint8Array): number {
 export type PowInput = {
   walletBytes: ReadonlyUint8Array;
   slotBytes: ReadonlyUint8Array;
-  adaptiveTarget: number;
+  targetDifficulty: number;
   totalHashesBytes: ReadonlyUint8Array;
 };
 
@@ -67,7 +67,7 @@ export async function findHash(
   input: PowInput,
   onProgress?: (status: PowStatus) => void
 ): Promise<PowComplete> {
-  const { walletBytes, slotBytes, adaptiveTarget, totalHashesBytes } = input;
+  const { walletBytes, slotBytes, targetDifficulty, totalHashesBytes } = input;
 
   // Pre-hash challenge
   const challenge = keccak_256(
@@ -82,7 +82,7 @@ export async function findHash(
   let finalHash!: Uint8Array;
   let nextYield = performance.now() + 32;
 
-  while (bestLZ < adaptiveTarget) {
+  while (bestLZ < targetDifficulty) {
     NONCE_VIEW.setBigUint64(0, nonce, true);
 
     // keccak(challenge || nonce)
@@ -96,7 +96,7 @@ export async function findHash(
     finalHash = keccak_256(DOUBLE_HASH_BUF);
 
     const lz = countLZ(finalHash);
-    const tz = lz + 64 < adaptiveTarget ? 0 : countTZ(finalHash);
+    const tz = lz + 64 < targetDifficulty ? 0 : countTZ(finalHash);
     const difficulty = lz + (tz >> 2);
 
     if (lz > bestLZ) bestLZ = lz;
@@ -109,7 +109,7 @@ export async function findHash(
     if (now >= nextYield) {
       onProgress?.({
         hashes: hashCount,
-        progress: Math.min(bestLZ / adaptiveTarget, 1),
+        progress: Math.min(bestLZ / targetDifficulty, 1),
         bestLZ,
         bestDifficulty,
       } satisfies PowStatus);
@@ -125,6 +125,6 @@ export async function findHash(
     difficulty: bestDifficulty,
     hash: finalHash,
     hashCount,
-    target: adaptiveTarget,
+    target: targetDifficulty,
   } satisfies PowComplete;
 }

@@ -29,7 +29,7 @@ const wasmReady = (async () => {
     try {
       // Get the path to the WASM file using require.resolve
       const wasmPath = require.resolve(
-        '@pow-miner-sdk/hash-wasm/hash_wasm_bg.wasm'
+        '@pow-miner-sdk/hash-wasm/dist/hash_wasm_bg.wasm'
       );
       const wasmBinary = readFileSync(wasmPath);
       await init({ module_or_path: wasmBinary });
@@ -67,7 +67,7 @@ interface WorkerMessage {
     challenge: Uint8Array;
     startNonce: string; // bigint as string
     endNonce: string; // bigint as string
-    adaptiveTarget: number;
+    targetDifficulty: number;
     batchSize?: number;
   };
 }
@@ -115,7 +115,7 @@ const setupMessageListener = () => {
         new Uint8Array(data.challenge),
         BigInt(data.startNonce),
         BigInt(data.endNonce),
-        data.adaptiveTarget,
+        data.targetDifficulty,
         data.batchSize || 100_000 // Use a larger batch size for WASM
       );
     } else if (type === 'stop') {
@@ -142,7 +142,7 @@ async function mineHashes(
   challenge: Uint8Array,
   startNonce: bigint,
   endNonce: bigint,
-  adaptiveTarget: number,
+  targetDifficulty: number,
   batchSize: number
 ): Promise<void> {
   if (!wasmModule) {
@@ -171,7 +171,7 @@ async function mineHashes(
       miner,
       nonce,
       currentBatchSize,
-      adaptiveTarget
+      targetDifficulty
     );
 
     if (result.found) {
@@ -185,7 +185,7 @@ async function mineHashes(
           difficulty,
           hash: Array.from(result.hash),
           hashCount: hashCount + Number(result.nonce - nonce) + 1,
-          target: adaptiveTarget,
+          target: targetDifficulty,
         },
       } as WorkerResponse);
       return;
@@ -207,7 +207,7 @@ async function mineHashes(
         type: 'progress',
         data: {
           hashes: hashCount,
-          progress: Math.min(bestLZ / adaptiveTarget, 1),
+          progress: Math.min(bestLZ / targetDifficulty, 1),
           bestLZ,
           bestDifficulty,
           currentNonce: nonce.toString(),

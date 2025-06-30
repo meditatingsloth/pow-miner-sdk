@@ -58,17 +58,17 @@ function getHardwareConcurrency(): number {
   return 4;
 }
 
-export function findHashSIMD(
+export function findHashMultithreaded(
   input: {
     walletBytes: ReadonlyUint8Array;
     slotBytes: ReadonlyUint8Array;
-    adaptiveTarget: number;
+    targetDifficulty: number;
     totalHashesBytes: ReadonlyUint8Array;
   },
   onProgress?: (status: PowStatus) => void,
   numWorkers: number = getHardwareConcurrency()
 ): Promise<PowComplete> {
-  const { walletBytes, slotBytes, adaptiveTarget, totalHashesBytes } = input;
+  const { walletBytes, slotBytes, targetDifficulty, totalHashesBytes } = input;
   const challenge = keccak_256(
     new Uint8Array([...walletBytes, ...slotBytes, ...totalHashesBytes])
   );
@@ -98,7 +98,7 @@ export function findHashSIMD(
           difficulty: data.difficulty ?? 0,
           hash: new Uint8Array(data.hash ?? []),
           hashCount: globalHashCount + (data.hashCount || 0),
-          target: adaptiveTarget,
+          target: targetDifficulty,
         });
       } else if (type === 'progress' && data) {
         if (data.hashes) globalHashCount += data.hashes;
@@ -109,7 +109,7 @@ export function findHashSIMD(
 
         onProgress?.({
           hashes: globalHashCount,
-          progress: Math.min((data.bestLZ ?? 0) / adaptiveTarget, 1),
+          progress: Math.min((data.bestLZ ?? 0) / targetDifficulty, 1),
           bestLZ: globalBestLZ,
           bestDifficulty: globalBestDifficulty,
         });
@@ -138,7 +138,7 @@ export function findHashSIMD(
           challenge,
           startNonce: startNonce.toString(),
           endNonce: endNonce.toString(),
-          adaptiveTarget,
+          targetDifficulty: targetDifficulty,
         },
       });
     }
