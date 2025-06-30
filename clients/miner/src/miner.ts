@@ -1,5 +1,6 @@
 import {
   fetchProofFromSeeds,
+  findHash,
   findHashMultithreaded,
   getClaimInstructionAsync,
   getMineInstructionAsync,
@@ -31,15 +32,18 @@ export class Miner {
   private client: Client;
   private keypairSigner: KeyPairSigner;
   private targetDifficulty: TargetDifficulty;
+  private multithreaded: boolean;
 
   constructor(
     client: Client,
     keypairSigner: KeyPairSigner,
-    targetDifficulty: TargetDifficulty = 25
+    targetDifficulty: TargetDifficulty = 25,
+    multithreaded: boolean = true
   ) {
     this.client = client;
     this.keypairSigner = keypairSigner;
     this.targetDifficulty = targetDifficulty;
+    this.multithreaded = multithreaded;
   }
 
   /**
@@ -90,7 +94,10 @@ export class Miner {
 
     const currentDifficulty = this.resolveTargetDifficulty();
 
-    const miningResult = await findHashMultithreaded(
+    const miningFunction = this.multithreaded
+      ? findHashMultithreaded
+      : findHash;
+    const miningResult = await miningFunction(
       {
         walletBytes,
         slotBytes,

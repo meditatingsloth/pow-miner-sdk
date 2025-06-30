@@ -104,3 +104,11 @@ Next time you build your program and run your validator, these external programs
 pnpm programs:build
 pnpm validator:restart
 ```
+
+## WASM Miner
+
+The multithreaded WASM miner requires the wasm package to be installed. You'll need wasm-pack installed:
+
+```sh
+curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+```
