@@ -1,0 +1,18 @@
+{
+  "name": "@pow-miner-sdk/hash-wasm",
+  "type": "module",
+  "scripts": {
+    "build": "cd src && wasm-pack build --target web --out-dir ../dist"
+  },
+  "version": "0.1.0",
+  "files": [
+    "dist/hash_wasm_bg.wasm",
+    "dist/hash_wasm.js",
+    "dist/hash_wasm.d.ts"
+  ],
+  "main": "dist/hash_wasm.js",
+  "types": "dist/hash_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
