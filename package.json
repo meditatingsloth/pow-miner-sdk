@@ -1,6 +1,8 @@
 {
   "private": true,
   "scripts": {
+    "build": "turbo build",
+    "dev": "turbo dev",
     "programs:build": "zx ./scripts/program/build.mjs",
     "programs:test": "zx ./scripts/program/test.mjs",
     "programs:clean": "zx ./scripts/program/clean.mjs",
@@ -41,5 +43,5 @@
   "engines": {
     "node": ">=v20.0.0"
   },
-  "packageManager": "pnpm@9.1.0"
+  "packageManager": "pnpm@10.9.0"
 }

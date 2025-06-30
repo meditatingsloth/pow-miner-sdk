@@ -1,6 +1,6 @@
 #!/usr/bin/env zx
-import 'zx/globals';
 import { readFileSync, writeFileSync } from 'fs';
+import 'zx/globals';
 import { workingDirectory } from '../utils.mjs';
 
 const mode = process.argv[3] || 'publish'; // 'publish' or 'workspace'

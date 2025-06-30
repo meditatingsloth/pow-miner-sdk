@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = ["clients/rust", "clients/useraccount/rust"]
+members = [ "clients/core/hash-wasm","clients/rust", "clients/useraccount/rust"]
 
 [profile.release]
 overflow-checks = true

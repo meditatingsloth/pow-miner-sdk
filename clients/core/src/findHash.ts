@@ -13,14 +13,15 @@ for (let i = 0; i < 256; i++) {
   TZ_TABLE[i] = tz;
 }
 
-function countLZ(h: Uint8Array): number {
+export function countLZ(h: Uint8Array): number {
   for (let i = 0; i < h.length; i++) {
     const v = h[i];
     if (v !== 0) return i * 8 + LZ_TABLE[v];
   }
   return h.length * 8;
 }
-function countTZ(h: Uint8Array): number {
+
+export function countTZ(h: Uint8Array): number {
   for (let i = h.length - 1; i >= 0; i--) {
     const v = h[i];
     if (v !== 0) return (h.length - 1 - i) * 8 + TZ_TABLE[v];

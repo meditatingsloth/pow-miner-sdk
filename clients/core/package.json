@@ -21,6 +21,7 @@
   "scripts": {
     "build": "rimraf dist && tsup && tsc -p ./tsconfig.declarations.json",
     "build:docs": "typedoc",
+    "dev": "tsup --watch",
     "test": "ava",
     "lint": "eslint --ext js,ts,tsx src",
     "lint:fix": "eslint --fix --ext js,ts,tsx src",
@@ -67,9 +68,10 @@
       }
     }
   },
-  "packageManager": "pnpm@9.1.0",
+  "packageManager": "pnpm@10.9.0",
   "dependencies": {
     "@noble/hashes": "^1.8.0",
-    "@solana/codecs-core": "^2.1.1"
+    "@solana/codecs-core": "^2.1.1",
+    "@pow-miner-sdk/hash-wasm": "workspace:*"
   }
 }

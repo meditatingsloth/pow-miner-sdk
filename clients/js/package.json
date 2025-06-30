@@ -67,9 +67,9 @@
       }
     }
   },
-  "packageManager": "pnpm@9.1.0",
+  "packageManager": "pnpm@10.9.0",
   "dependencies": {
-    "@pow-miner-sdk/core": "*",
+    "@pow-miner-sdk/core": "workspace:*",
     "@solana/kit": "^2.1.1",
     "gill": "^0.10.2"
   }
