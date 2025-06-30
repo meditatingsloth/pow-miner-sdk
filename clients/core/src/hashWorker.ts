@@ -32,7 +32,7 @@ const wasmReady = (async () => {
         '@pow-miner-sdk/hash-wasm/hash_wasm_bg.wasm'
       );
       const wasmBinary = readFileSync(wasmPath);
-      await init(wasmBinary);
+      await init({ module_or_path: wasmBinary });
     } catch (error) {
       console.error('Failed to load WASM in Node.js:', error);
       // Fallback to default initialization

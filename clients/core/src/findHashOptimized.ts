@@ -25,6 +25,39 @@ type WorkerResponse = {
   };
 };
 
+// Cross-platform hardware concurrency detection
+function getHardwareConcurrency(): number {
+  // Browser environment
+  if (typeof navigator !== 'undefined' && navigator.hardwareConcurrency) {
+    return navigator.hardwareConcurrency;
+  }
+
+  // Node.js environment
+  if (typeof process !== 'undefined' && process.env) {
+    // Try to get from environment variable first
+    const envCores = process.env.NODE_OPTIONS?.match(
+      /--max-old-space-size=(\d+)/
+    )?.[1];
+    if (envCores) {
+      return parseInt(envCores, 10);
+    }
+
+    // Fallback to os.cpus() if available
+    try {
+      // Use dynamic import for os module to avoid require() linter error
+      const os = eval('require')('os');
+      const cpuCount = os.cpus().length;
+      // Ensure we don't return 0 or negative values
+      return Math.max(cpuCount, 1);
+    } catch {
+      // If os module is not available, use a reasonable default
+    }
+  }
+
+  // Default fallback - use a reasonable number for most systems
+  return 4;
+}
+
 export function findHashSIMD(
   input: {
     walletBytes: ReadonlyUint8Array;
@@ -33,7 +66,7 @@ export function findHashSIMD(
     totalHashesBytes: ReadonlyUint8Array;
   },
   onProgress?: (status: PowStatus) => void,
-  numWorkers: number = navigator.hardwareConcurrency || 4
+  numWorkers: number = getHardwareConcurrency()
 ): Promise<PowComplete> {
   const { walletBytes, slotBytes, adaptiveTarget, totalHashesBytes } = input;
   const challenge = keccak_256(
