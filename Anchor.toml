@@ -1,0 +1,6 @@
+[provider]
+cluster = "localnet"
+wallet = "~/.config/solana/id.json"
+
+[programs.localnet]
+pow_miner = "BGLDbLHXzZEKvZX2PAkvSChWtZYySZ16Drj6NX247AfY"
