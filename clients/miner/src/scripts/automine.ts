@@ -76,18 +76,6 @@ async function main() {
   // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
-      const balance = await client.rpc.getBalance(keypairSigner.address).send();
-      console.log('balance: ' + lamportsToSol(balance.value) + ' SOL');
-      if (balance.value < minBalance) {
-        console.log(
-          `💰 Balance too low, stopping mining: ${keypairSigner.address} ${lamportsToSol(
-            balance.value
-          )} SOL`
-        );
-        await miner.claimRewards();
-        break;
-      }
-
       // 1. Check if user has proof account, initialize if needed
       const proofAccount = await fetchMaybeProofFromSeeds(client.rpc, {
         user: keypairSigner.address,
@@ -97,7 +85,22 @@ async function main() {
         throw new Error('Proof account not found');
       }
 
-      const { canMine, secondsLeft } = await miner.canMine();
+      const balance = await client.rpc.getBalance(keypairSigner.address).send();
+      console.log('balance: ' + lamportsToSol(balance.value) + ' SOL');
+      if (balance.value < minBalance) {
+        console.log(
+          `💰 Balance too low, stopping mining: ${keypairSigner.address} ${lamportsToSol(
+            balance.value
+          )} SOL`
+        );
+
+        if (proofAccount.data.balance > 0) {
+          await miner.claimRewards();
+        }
+        break;
+      }
+
+      const { canMine, secondsLeft } = await miner.canMine(proofAccount);
       if (!canMine) {
         console.log(`⏳ Must wait ${secondsLeft} seconds before mining again`);
         await new Promise((resolve) => setTimeout(resolve, secondsLeft * 1000));

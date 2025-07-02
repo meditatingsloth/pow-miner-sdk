@@ -1,5 +1,4 @@
 import {
-  fetchProofFromSeeds,
   findHash,
   findHashMultithreaded,
   getClaimInstructionAsync,
@@ -12,6 +11,7 @@ import {
 import { findUserPda } from '@pow-miner-sdk/useraccount-js';
 import cliProgress from 'cli-progress';
 import {
+  Account,
   getAddressEncoder,
   getProgramDerivedAddress,
   getU64Encoder,
@@ -212,16 +212,12 @@ export class Miner {
   /**
    * Check if user can mine (cooldown check)
    */
-  async canMine(): Promise<{ canMine: boolean; secondsLeft: number }> {
-    const proof = await fetchProofFromSeeds(this.client.rpc, {
-      user: this.keypairSigner.address,
-    });
-    if (!proof) {
-      return { canMine: false, secondsLeft: 0 };
-    }
-
+  async canMine(
+    proof: Account<Proof>
+  ): Promise<{ canMine: boolean; secondsLeft: number }> {
     const now = Math.floor(Date.now() / 1000);
-    const secondsLeft = Math.max(0, Number(proof.data.nextMineAt) - now);
+    // Minimum 2 second wait to account for possible Solana clock discrepancy
+    const secondsLeft = Math.max(0, Number(proof.data.nextMineAt) - now) + 2;
 
     return {
       canMine: secondsLeft <= 0,
